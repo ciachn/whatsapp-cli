@@ -59,8 +59,8 @@ const commands =
   * clear                              Clears the console.
   * chats                              Shows a list of available chats.
   * groups                             Shows a list of available groups.
+  * group-members <name|idx>           Shows the members of a group.
   * send <phone> <message>             Sends a message to the specified phone number.
-
   * lists                              Shows the registered lists of phone numbers.
   * list-add <list-name> <phone...>    Adds one or more phone numbers to a list.
   * list-rem <list-name> <phone...>    Removes one or more phone numbers from a list.
@@ -100,6 +100,40 @@ const commands =
 			if (!chat.isGroup) continue;
 
 			console.log(`  ${idx}: ${chat.name} [${chat.groupMetadata.size}] (${chat.unreadCount})`);
+		}
+	},
+
+	'group-members': async function(args, line)
+	{
+		if (args.length < 2) throw new Error('  Use: group-members <group-name>');
+
+		let name = line.substr(line.indexOf(' ')+1);
+
+		for (let idx in chatList)
+		{
+			const chat = chatList[idx];
+			if (!chat.isGroup) continue;
+
+			if (name[0] === '#' && idx != name.substr(1))
+				continue;
+
+			if (name[0] !== '#' && name != chat.name)
+				continue;
+
+			let s = '';
+			let n = 0;
+
+			for (let x of chat.participants)
+			{
+				s += x.id.user.padStart(13, ' ') + (x.isSuperAdmin ? '!' : (x.isAdmin ? '*' : ' '));
+				if (++n == 6) {
+					s += '\n';
+					n = 0;
+				}
+			}
+
+			console.log(s);
+			break;
 		}
 	},
 

@@ -1,3 +1,30 @@
+client.on('ready', async () => {
+    client.sendMessage(
+        '1234567890@c.us', 
+        'BEGIN:VCARD
+          ....(vcarddata)....
+        END:VCARD', 
+        {'parseVCards':true}) // by default its true
+     .then(...).catch(...);
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 const { Client, LocalAuth } = require('whatsapp-web.js');
 const qrcode = require('qrcode-terminal');
 const readline = require('readline');
@@ -60,6 +87,7 @@ const commands =
   * chats                              Shows a list of available chats.
   * groups                             Shows a list of available groups.
   * group-members <name|idx>           Shows the members of a group.
+  * group-add <group-name> <phone...>  Adds one or more phones to a group.
   * send <phone> <message>             Sends a message to the specified phone number.
   * lists                              Shows the registered lists of phone numbers.
   * list-add <list-name> <phone...>    Adds one or more phone numbers to a list.
@@ -133,6 +161,38 @@ const commands =
 			}
 
 			console.log(s);
+			break;
+		}
+	},
+
+	'group-add': async function(args)
+	{
+		if (args.length < 2) throw new Error('  Use: group-add <group-name> <phone...>');
+
+		let name = args[1];
+
+		for (let idx in chatList)
+		{
+			const chat = chatList[idx];
+			if (!chat.isGroup) continue;
+
+			if (name[0] === '#' && idx != name.substr(1))
+				continue;
+
+			if (name[0] !== '#' && name != chat.name)
+				continue;
+
+			for (let i = 2; i < args.length; i++)
+			{
+				try {
+					await chat.addParticipants([ Phone(args[i])+'@c.us' ])
+					console.log('  Added ' + args[i]);
+				}
+				catch (e) {
+					console.log('  Error: Unable to add ' + args[i]);
+				}
+			}
+
 			break;
 		}
 	},

@@ -1,29 +1,12 @@
-client.on('ready', async () => {
-    client.sendMessage(
-        '1234567890@c.us', 
-        'BEGIN:VCARD
-          ....(vcarddata)....
-        END:VCARD', 
-        {'parseVCards':true}) // by default its true
-     .then(...).catch(...);
-});
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+// client.on('ready', async () => {
+//     client.sendMessage(
+//         '1234567890@c.us', 
+//         'BEGIN:VCARD
+//           ....(vcarddata)....
+//         END:VCARD', 
+//         {'parseVCards':true}) // by default its true
+//      .then(...).catch(...);
+// });
 
 const { Client, LocalAuth } = require('whatsapp-web.js');
 const qrcode = require('qrcode-terminal');
